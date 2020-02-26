@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        img{
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+    <script src="./jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    <input type="file" name='image' id="imagelist">
+    <img src="">
+    <button onclick="Req_ajax()"> 上传</button>
+<script>
+    var OL_Action_Root = "http://localhost:8000";
+function Req_ajax()
+{           
+    console.log($("#imagelist")[0].files)
+    // 获取file域里的图片信息
+     var formData = new FormData()
+     //创建formdata对象
+    formData.append("test",$("#imagelist")[0].files[0])  
+    // 将文件信息 append 进入formdata对象  key值 为后台 single 设置的值  
+    $.ajax({
+        url: OL_Action_Root+'/upload/img',
+        type: 'POST',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data){
+           if (data.err==0) { 
+               $('img').attr('src',OL_Action_Root+data.data)
+               console.log(OL_Action_Root+data.data)
+           }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            document.getElementById("status").innerHTML = "<span style='color:#EF0000'>连接不到服务器，请检查网络！</span>";
+        }
+    });
+}
+
+</script>
+</body>
+</html>
